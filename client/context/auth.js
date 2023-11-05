@@ -11,28 +11,30 @@ const AuthProvider = ({ children }) => {
     token: "",
   });
 
-  // // navigation
-  // const navigation = useNavigation();
+  // navigation
+  const navigation = useNavigation();
 
-  // // config axios
-  // const token = state && state.token ? state.token : "";
-  // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  // config axios
+  const token = state && state.token ? state.token : "";
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-  // // handle expired token or 401 error
-  // axios.interceptors.response.use(
-  //   async function (response) {
-  //     return response;
-  //   },
+  // handle expired token or 401 error
+  axios.interceptors.response.use(
+    async function (response) {
+      console.log('response', response);
+      return response;
+    },
 
-  //   async function (error) {
-  //     let res = error.response;
-  //     if (res.status === 401 && res.config && !res.config._isRetryRequest) {
-  //       await AsyncStorage.removeItem("auth-rn");
-  //       setState({ user: null, token: "" });
-  //       navigation.navigate("SignIn");
-  //     }
-  //   }
-  // );
+    async function (error) {
+      let res = error.response;
+      console.log('error', error);
+      if (res.status === 401 && res.config && !res.config._isRetryRequest) {
+        await AsyncStorage.removeItem("auth-rn");
+        setState({ user: null, token: "" });
+        navigation.navigate("SignIn");
+      }
+    }
+  );
 
   useEffect(() => {
     const loadFromAsyncStorage = async () => {

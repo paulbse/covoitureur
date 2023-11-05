@@ -69,9 +69,10 @@ exports.signup = async (req, res) => {
   }
 };
 exports.signin = async (req, res) => {
-  // console.log(req.body);
+  console.log("Signin Hit");
   try {
     const { email, password } = req.body;
+    console.log('received in signin back : ', email, password);
     // check if our db has user with that email
     const user = await User.findOne({ email });
     if (!user) {

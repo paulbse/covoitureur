@@ -18,23 +18,34 @@ const SignIn = ({ navigation }) => {
   const [state, setState] = useContext(AuthContext);
 
   const handleSubmit = async () => {
+    console.log('signinhandlesubmit', email, password);
     if (email === "" || password === "") {
       alert("All fields are required");
-      return; 
+      return;
     }
-    const resp = await axios.post("http://localhost:8000/api/signin", {
-      email,
-      password,
-    });
-    console.log('signinhandlesubmit',resp.data);
-    if (resp.data.error) alert(resp.data.error);
-    else {
-      setState(resp.data);
-      await AsyncStorage.setItem("auth-rn", JSON.stringify(resp.data));
-      alert("Sign In Successful");
-      navigation.navigate("Home");
+  
+    // Allow insecure HTTP requests (only if your backend is running over HTTP)
+    axios.defaults.insecureHTTP = true;
+  
+    try {
+      const resp = await axios.get("http://192.168.118.164:8000/signin"); // Use the correct URL for your backend
+      console.log('signinhandlesubmit', resp.data);
+  
+      if (resp.data.error) {
+        alert(resp.data.error);
+      } else {
+        setState(resp.data);
+        await AsyncStorage.setItem("auth-rn", JSON.stringify(resp.data));
+        alert("Sign In Successful");
+        //navigation.navigate("Home");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert("An error occurred while making the API call.");
     }
   };
+  
+  
 
   return (
     <KeyboardAwareScrollView contentCotainerStyle={styles.container}>

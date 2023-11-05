@@ -11,6 +11,7 @@ const {
 } = require("../controllers/auth");
 
 router.get("/", (req, res) => {
+  console.log("hello world from the API");
   return res.json({
     data: "hello world from the API",
   });
