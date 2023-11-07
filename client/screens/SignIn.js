@@ -29,7 +29,7 @@ const SignIn = ({ navigation }) => {
   
     try {
       const resp = await axios.post("http://localhost:8000/api/signin", {
-        email,
+        email,  
         password,
       }); // Use the correct URL for your backend
       console.log('signinhandlesubmit', resp);
