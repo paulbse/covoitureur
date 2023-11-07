@@ -28,8 +28,11 @@ const SignIn = ({ navigation }) => {
     axios.defaults.insecureHTTP = true;
   
     try {
-      const resp = await axios.get("http://192.168.118.164:8000/signin"); // Use the correct URL for your backend
-      console.log('signinhandlesubmit', resp.data);
+      const resp = await axios.post("http://localhost:8000/api/signin", {
+        email,
+        password,
+      }); // Use the correct URL for your backend
+      console.log('signinhandlesubmit', resp);
   
       if (resp.data.error) {
         alert(resp.data.error);
