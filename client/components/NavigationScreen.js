@@ -8,6 +8,8 @@ import HeaderTabs from "./header/HeaderTabs";
 import Trajet from "../screens/Trajet";
 import Groupe from "../screens/Groupe";
 import Profil from "../screens/Profil";
+import NouveauGroupe from "../screens/NouveauGroupe";
+import NouveauTrajet from "../screens/NouveauTrajet";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +25,8 @@ const NavigationScreen = () => {
           <Stack.Screen name="Trajet" component={Trajet} />
           <Stack.Screen name="Groupe" component={Groupe} />
           <Stack.Screen name="Profil" component={Profil} />
+          <Stack.Screen name="NouveauGroupe" component={NouveauGroupe} />
+          <Stack.Screen name="NouveauTrajet" component={NouveauTrajet} />
         </>
       ) : (
         <>
