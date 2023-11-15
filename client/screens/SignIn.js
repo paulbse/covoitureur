@@ -28,8 +28,12 @@ const SignIn = ({ navigation }) => {
     axios.defaults.insecureHTTP = true;
   
     try {
-      const resp = await axios.get("http://192.168.118.164:8000/signin"); // Use the correct URL for your backend
-      console.log('signinhandlesubmit', resp.data);
+      const resp = await axios.post("http://192.168.1.190:8000/api/signin", {
+        email,  
+        password,
+      }); // Use the correct URL for your backend
+      console.log('signinhandlesubmit', resp);
+      console.log(resp)
   
       if (resp.data.error) {
         alert(resp.data.error);
@@ -45,9 +49,7 @@ const SignIn = ({ navigation }) => {
     }
   };
   
-  
-
-  return (
+    return (
     <KeyboardAwareScrollView contentCotainerStyle={styles.container}>
       <View style={{ marginVertical: 100 }}>
         <View style={styles.imageContainer}>
