@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
+const groupRoutes = require('./routes/group');
 
 const morgan = require("morgan");
 const app = express();
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 
 // Route middlewares
 app.use("/api", authRoutes);
+app.use('/api', groupRoutes);
 
 // Other routes
 app.get("/signup", (req, res) => {

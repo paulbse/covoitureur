@@ -10,7 +10,7 @@ const userSchema = new Schema(
     prenom: {
        type: String,
        trim: true,
-       required: true,
+       required: false,
      },
     email: {
       type: String,

@@ -19,32 +19,28 @@ const MonGroupe = () => {
     setGroup({ ...group, members: [...group.members, { userId: '' }] });
   };
 
-  const handleSubmit = () => {
-    console.log('createNewGroup', group.groupName);
-    alert("je suis charlie");
-    if (group.groupName === "") {
-      alert("Choisis un nom pour ton groupe");
-      return;
-    }
-
-    console.log('Nouveau groupe à enregistrer :', group);
-  
-    // Utilisation d'une URL relative au lieu de l'URL complète (facilite le déploiement)
+  const handleSubmit = async () => {
     try {
-      axios.post('http://192.168.1.190:8000/api/groups', group)
-        .then(response => {
-          // Traitez la réponse ici, par exemple, redirigez l'utilisateur vers une autre page
-          alert("Groupe créé avec succès");
-        })
-        .catch(error => {
-          console.error(error);
-          // Traitez l'erreur ici, affichez un message à l'utilisateur, etc.
-          alert("aucun Groupe créé avec succès");
-        });
+      if (group.groupName === "") {
+        alert("Choisis un nom pour ton groupe");
+        return;
+      }
+  
+      console.log('Nouveau groupe à enregistrer :', group);
+  
+      const response = await axios.post('http://192.168.1.190:8000/api/new_groups', group);
+  
+      if (response && response.data) {
+        console.log(response.data);
+        alert("Groupe créé");
+        navigation.navigate("Home");
+      } else {
+        console.error('Pas de data dans la réponse Axios');
+        alert("Erreur lors de la création du groupe");
+      }
     } catch (error) {
-      console.error(error);
-      // Traitez l'erreur ici, affichez un message à l'utilisateur, etc.
-      alert("Encore une erreur, pas de groupe créé.")
+      console.error('Erreur lors de la requête Axios :', error);
+      alert("Erreur lors de la création du groupe");
     }
   };
     
