@@ -29,7 +29,6 @@ app.get("/", (req, res) => {
 
 // Route middlewares
 app.use("/api", authRoutes);
-app.use('/api', groupRoutes);
 
 // Other routes
 app.get("/signup", (req, res) => {

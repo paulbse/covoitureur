@@ -1,5 +1,8 @@
 const express = require("express") ;
 const router = express.Router();
+const {
+  createGroupe,
+} = require("../controllers/group");
 
 // controllers
 const {
@@ -22,5 +25,6 @@ router.post("/signin", signin);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.post("/upload-image", uploadImage)
+router.post('/new_group', createGroupe);
 
 module.exports = router;

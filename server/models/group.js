@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const groupeSchema = new mongoose.Schema(
   {
-    name: {
+    nom: {
       type: String,
       trim: true,
       required: true,

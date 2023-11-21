@@ -25,7 +25,7 @@ const SignUp = ({ navigation }) => {
       return;
     }
     try {
-      const resp = await axios.post("http://localhost:8000/api/signup", {
+      const resp = await axios.post("/api/signup", {
         name,
         // prenom,
         email,

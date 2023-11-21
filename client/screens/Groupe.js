@@ -3,28 +3,6 @@ import { StyleSheet, Text, SafeAreaView, View } from "react-native";
 import React from "react";
 
 import FooterList from "../components/footer/FooterList";           
-
-const groupData = {
-  groups: [
-    {
-      id: "group1",
-      nextMeeting: "XXX",
-      city: "CHAUDEFONT",
-      date: "16/10/18",
-      members: [
-        {
-          name: "NOM PRENOM",
-          email: "ADRESSE MAIL",
-        },
-        {
-          name: "NOM PRENOM",
-          email: "ADRESSE MAIL",
-        },
-      ],
-    },
-  ],
-};
-
 const groupData = {
   groups: [
     {

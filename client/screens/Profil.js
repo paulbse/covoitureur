@@ -41,7 +41,7 @@ const Profil = ({ navigation }) => {
       alert("All fields are required");
       return;
     }
-    const resp = await axios.post("http://localhost:8000/api/signin", {
+    const resp = await axios.post("/api/signin", {
       email,
       password,
     });
@@ -74,7 +74,7 @@ const Profil = ({ navigation }) => {
     let storedData = await AsyncStorage.getItem("auth-rn");
     const parsed = JSON.parse(storedData);
     const { data } = await axios.post(
-      "http://localhost:8000/api/upload-image",
+      "/api/upload-image",
       {
         image: base64Image,
         user: parsed.user,

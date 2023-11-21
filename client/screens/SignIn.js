@@ -28,7 +28,7 @@ const SignIn = ({ navigation }) => {
     axios.defaults.insecureHTTP = true;
   
     try {
-      const resp = await axios.post("http://192.168.1.190:8000/api/signin", {
+      const resp = await axios.post("/api/signin", {
 
         email,  
         password,

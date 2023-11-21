@@ -4,31 +4,31 @@ import axios from 'axios';
 
 const MonGroupe = () => {
   const [group, setGroup] = useState({
-    groupName: '',
-    trip: '',
-    members: [{ userId: '' }],
+    nom: '',
+    trajetUsuel: '',
+    membres: [{ userId: '' }],
   });
 
   const handleInputChange = (value, index) => {
-    const members = [...group.members];
-    members[index]['userId'] = value;
-    setGroup({ ...group, members });
+    const membres = [...group.membres];
+    membres[index]['userId'] = value;
+    setGroup({ ...group, membres });
   };
 
   const handleAddMember = () => {
-    setGroup({ ...group, members: [...group.members, { userId: '' }] });
+    setGroup({ ...group, membres: [...group.membres, { userId: '' }] });
   };
 
   const handleSubmit = async () => {
     try {
-      if (group.groupName === "") {
+      if (group.nom === "") {
         alert("Choisis un nom pour ton groupe");
         return;
       }
   
       console.log('Nouveau groupe à enregistrer :', group);
   
-      const response = await axios.post('http://192.168.1.190:8000/api/new_groups', group);
+      const response = await axios.post('/api/new_group', group);
   
       if (response && response.data) {
         console.log(response.data);
@@ -50,16 +50,16 @@ const MonGroupe = () => {
       <TextInput
         style={styles.input}
         placeholder="Nom du groupe"
-        onChangeText={(text) => setGroup({ ...group, groupName: text })}
-        value={group.groupName}
+        onChangeText={(text) => setGroup({ ...group, nom: text })}
+        value={group.nom}
       />
       <TextInput
         style={styles.input}
         placeholder="Trajet"
-        onChangeText={(text) => setGroup({ ...group, trip: text })}
-        value={group.trip}
+        onChangeText={(text) => setGroup({ ...group, trajetUsuel: text })}
+        value={group.trajetUsuel}
       />
-      {group.members.map((member, index) => (
+      {group.membres.map((member, index) => (
         <TextInput
           key={`member-${index}`}
           style={styles.input}
