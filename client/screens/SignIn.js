@@ -29,6 +29,7 @@ const SignIn = ({ navigation }) => {
   
     try {
       const resp = await axios.post("http://192.168.1.190:8000/api/signin", {
+
         email,  
         password,
       }); // Use the correct URL for your backend

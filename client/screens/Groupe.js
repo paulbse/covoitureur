@@ -25,6 +25,27 @@ const groupData = {
   ],
 };
 
+const groupData = {
+  groups: [
+    {
+      id: "group1",
+      nextMeeting: "XXX",
+      city: "CHAUDEFONT",
+      date: "16/10/18",
+      members: [
+        {
+          name: "NOM PRENOM",
+          email: "ADRESSE MAIL",
+        },
+        {
+          name: "NOM PRENOM",
+          email: "ADRESSE MAIL",
+        },
+      ],
+    },
+  ],
+};
+
 const Groupe = () => {
   return (
     <SafeAreaView style={styles.container}>

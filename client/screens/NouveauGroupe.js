@@ -66,7 +66,7 @@ const MonGroupe = () => {
           placeholder="Rentre l'ID Covoit des membres"
           onChangeText={(text) => handleInputChange(text, index)}
           value={member.userId}
-        />
+      />
       ))}
       <TouchableOpacity style={styles.button} onPress={handleAddMember}>
         <Text style={styles.buttonText}>AJOUTER UN AUTRE MEMBRE</Text>
