@@ -51,6 +51,13 @@ const Home = () => {
         >
           <Text style={styles.buttonText}>CRÉER UN GROUPE</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("RejoindreGroupe")}
+        >
+          <Text style={styles.buttonText}>REJOINDRE UN GROUPE</Text>
+        </TouchableOpacity>
+
       </View>
       {groupData.groups.map((group, index) => (
         <View key={group.id} style={styles.groupContainer}>

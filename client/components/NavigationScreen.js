@@ -10,6 +10,7 @@ import Groupe from "../screens/Groupe";
 import Profil from "../screens/Profil";
 import NouveauGroupe from "../screens/NouveauGroupe";
 import NouveauTrajet from "../screens/NouveauTrajet";
+import RejoindreGroupe from "../screens/RejoindreGroupe";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,7 @@ const NavigationScreen = () => {
           <Stack.Screen name="Profil" component={Profil} />
           <Stack.Screen name="NouveauGroupe" component={NouveauGroupe} />
           <Stack.Screen name="NouveauTrajet" component={NouveauTrajet} />
+          <Stack.Screen name="RejoindreGroupe" component={RejoindreGroupe} />
         </>
       ) : (
         <>

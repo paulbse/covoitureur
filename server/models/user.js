@@ -7,11 +7,11 @@ const userSchema = new Schema(
       trim: true,
       required: true,
     },
-    // prenom: {
-    //   type: String,
-    //   trim: true,
-    //   required: true,
-    // },
+    prenom: {
+       type: String,
+       trim: true,
+       required: false,
+     },
     email: {
       type: String,
       trim: true,

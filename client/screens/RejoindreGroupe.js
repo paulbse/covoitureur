@@ -1,52 +1,32 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import axios from 'axios';
+import { StyleSheet, TextInput, Text, TouchableOpacity, ScrollView } from 'react-native';
 
-const MonGroupe = () => {
+const RejoindreGroupe = () => {
   const [group, setGroup] = useState({
     groupName: '',
     trip: '',
-    members: [{ userId: '' }],
+    members: [{ email: '' }],
   });
 
   const handleInputChange = (value, index) => {
     const members = [...group.members];
-    members[index]['userId'] = value;
+    members[index]['email'] = value;
     setGroup({ ...group, members });
   };
 
   const handleAddMember = () => {
-    setGroup({ ...group, members: [...group.members, { userId: '' }] });
+    setGroup({ ...group, members: [...group.members, { email: '' }] });
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (group.groupName === "") {
-        alert("Choisis un nom pour ton groupe");
-        return;
-      }
-  
-      console.log('Nouveau groupe à enregistrer :', group);
-  
-      const response = await axios.post('http://192.168.1.190:8000/api/new_groups', group);
-  
-      if (response && response.data) {
-        console.log(response.data);
-        alert("Groupe créé");
-        navigation.navigate("Home");
-      } else {
-        console.error('Pas de data dans la réponse Axios');
-        alert("Erreur lors de la création du groupe");
-      }
-    } catch (error) {
-      console.error('Erreur lors de la requête Axios :', error);
-      alert("Erreur lors de la création du groupe");
-    }
+  const handleSubmit = () => {
+    // Logic to submit the data goes here
+    // This is where you would call an API to save the group information
+    console.log(group);
   };
-    
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>NOUVEAU GROUPE</Text>
+      <Text style={styles.header}>REJOINDRE GROUPE</Text>
       <TextInput
         style={styles.input}
         placeholder="Nom du groupe"
@@ -55,7 +35,7 @@ const MonGroupe = () => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Trajet"
+        placeholder="groupId"
         onChangeText={(text) => setGroup({ ...group, trip: text })}
         value={group.trip}
       />
@@ -63,16 +43,13 @@ const MonGroupe = () => {
         <TextInput
           key={`member-${index}`}
           style={styles.input}
-          placeholder="Rentre l'ID Covoit des membres"
+          placeholder="Adresse mail du membre"
           onChangeText={(text) => handleInputChange(text, index)}
-          value={member.userId}
-      />
+          value={member.email}
+        />
       ))}
-      <TouchableOpacity style={styles.button} onPress={handleAddMember}>
-        <Text style={styles.buttonText}>AJOUTER UN AUTRE MEMBRE</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>ENREGISTRER LE GROUPE</Text>
+        <Text style={styles.buttonText}>REJOINDRE LE GROUPE</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -110,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MonGroupe;
+export default RejoindreGroupe;
