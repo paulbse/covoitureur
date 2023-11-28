@@ -5,7 +5,7 @@ const groupeSchema = new mongoose.Schema(
     nom: {
       type: String,
       trim: true,
-      required: true,
+      required: false,
     },
     trajetUsuel: {
        type: String,
@@ -14,7 +14,7 @@ const groupeSchema = new mongoose.Schema(
      },
     membres: {
       type: Array, 
-      ref: 'Id Utilisateur',
+      ref: 'userMail',
       trim: true,
       required: true,
       unique: true,

@@ -12,20 +12,11 @@ import { useNavigation } from "@react-navigation/native";
 const groupData = {
   groups: [
     {
-      id: "group1",
-      nextMeeting: "XXX",
-      city: "CHAUDEFONT",
-      date: "16/10/18",
-      members: [
-        {
-          name: "NOM PRENOM",
-          email: "ADRESSE MAIL",
-        },
-        {
-          name: "NOM PRENOM",
-          email: "ADRESSE MAIL",
-        },
-      ],
+      id: "",
+      nextMeeting: "",
+      city: "",
+      date: "1",
+      members: [],
     },
   ],
 };

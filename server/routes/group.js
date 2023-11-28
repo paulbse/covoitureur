@@ -1,15 +1,8 @@
-const express = require("express") ;
-const router = express.Router();
 const Group = require('../models/group');
 
-// controllers
-const {
-  createGroupe,
-} = require("../controllers/group");
 
 
 
-router.post('/new_group', createGroupe);
 
 // Rechercher un groupe par ID
 router.get('/groups/:id', async (req, res) => {
@@ -36,4 +29,3 @@ router.patch('/groups/:id', async (req,res) => {
     }  
 });
 
-module.exports = router;

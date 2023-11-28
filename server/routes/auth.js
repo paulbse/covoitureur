@@ -1,8 +1,15 @@
 const express = require("express") ;
 const router = express.Router();
+
+
 const {
   createGroupe,
 } = require("../controllers/group");
+
+router.use((req, res, next) => {
+  console.log('Requête reçue :', req.method, req.url, req.body);
+  next();
+});
 
 // controllers
 const {

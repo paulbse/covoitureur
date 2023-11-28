@@ -1,46 +1,78 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import React, { useContext, useState } from "react";
+import { StyleSheet, TextInput, Text, TouchableOpacity, ScrollView, Alert, View, ActivityIndicator } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../context/auth";
 import axios from 'axios';
 
 const MonGroupe = () => {
+
+  const [state, setState] = useContext(AuthContext);
+
+  const navigation = useNavigation();
+
   const [group, setGroup] = useState({
     nom: '',
     trajetUsuel: '',
-    membres: [{ userId: '' }],
+    membres: [{ userMail: '' }],
   });
 
+  console.log(group)
+
+  const [loading, setLoading] = useState(false);
+
   const handleInputChange = (value, index) => {
-    const membres = [...group.membres];
-    membres[index]['userId'] = value;
-    setGroup({ ...group, membres });
+    setGroup((prevGroup) => ({
+      ...prevGroup,
+      membres: prevGroup.membres.map((member, i) =>
+        i === index ? { ...member, userMail: value } : member
+      ),
+    }));
   };
 
   const handleAddMember = () => {
-    setGroup({ ...group, membres: [...group.membres, { userId: '' }] });
+    setGroup((prevGroup) => ({
+      ...prevGroup,
+      membres: [...prevGroup.membres, { userMail: '' }],
+    }));
   };
 
   const handleSubmit = async () => {
     try {
-      if (group.nom === "") {
-        alert("Choisis un nom pour ton groupe");
-        return;
-      }
-  
-      console.log('Nouveau groupe à enregistrer :', group);
-  
-      const response = await axios.post('/api/new_group', group);
-  
+
+      setLoading(true);
+
+      console.log('Nouveau groupe à enregistrer :', JSON.stringify(group));
+
+      const response = await axios.post('/api/new_group', JSON.stringify(group), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+           
+
       if (response && response.data) {
-        console.log(response.data);
-        alert("Groupe créé");
-        navigation.navigate("Home");
+
+        console.log('Réponse Axios réussie:', response.data)
+            
+        // Log pour vérifier si la navigation est atteinte
+        console.log('Avant la navigation vers Home');
+
+        // Retarder la navigation de 500 millisecondes
+        setTimeout(() => {
+          navigation.navigate("Home");
+          console.log('Après la navigation vers Home');
+        }, 500);
+
       } else {
         console.error('Pas de data dans la réponse Axios');
-        alert("Erreur lors de la création du groupe");
+        Alert.alert("Erreur lors de la création du groupe");
       }
     } catch (error) {
       console.error('Erreur lors de la requête Axios :', error);
-      alert("Erreur lors de la création du groupe");
+      Alert.alert("Erreur lors de la création du groupe");
+    } finally {
+      setLoading(false);
+      console.log("fin de chargement")
     }
   };
     
@@ -63,16 +95,30 @@ const MonGroupe = () => {
         <TextInput
           key={`member-${index}`}
           style={styles.input}
-          placeholder="Rentre l'ID Covoit des membres"
+          placeholder="Rentre l'email des membres du group"
           onChangeText={(text) => handleInputChange(text, index)}
-          value={member.userId}
+          value={member.userMail}
       />
       ))}
       <TouchableOpacity style={styles.button} onPress={handleAddMember}>
         <Text style={styles.buttonText}>AJOUTER UN AUTRE MEMBRE</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>ENREGISTRER LE GROUPE</Text>
+
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="black" style={styles.spinner} />
+          <Text style={styles.loadingText}>Enregistrement en cours...</Text>
+        </View>
+      )}
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: loading ? 'gray' : 'black' }]}
+        onPress={handleSubmit}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? 'ENREGISTREMENT EN COURS...' : 'ENREGISTRER LE GROUPE'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -107,6 +153,20 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     textAlign: 'center',
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  
+  loadingText: {
+    marginTop: 10,
+    color: 'gray',
+  },
+  
+  spinner: {
+    marginVertical: 20,
   },
 });
 
