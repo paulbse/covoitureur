@@ -13,7 +13,7 @@ const MonGroupe = () => {
   const [group, setGroup] = useState({
     nom: '',
     trajetUsuel: '',
-    membres: [{ userMail: '' }],
+    membres: [{ userMail: state.user.email }],
   });
 
   console.log(group)
