@@ -1,21 +1,67 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import axios from 'axios';
 
 const NouveauTrajet = () => {
   const [trip, setTrip] = useState({
     date: '',
-    driver: '',
+    conducteur: '',
     group: '',
+    passagers:[],
   });
 
-  const handleInputChange = (name, value) => {
-    setTrip({ ...trip, [name]: value });
+  const handleInputChange = (value, index) => {
+    setTrip((prevTrip) => ({
+      ...prevTrip,
+      trip: prevTrip.passagers.map((passager, i) =>
+        i === index ? { ...passager, nom: value } : passager
+      ),
+    }));
   };
 
-  const handleSubmit = () => {
-    // Logic to submit the data goes here
-    // For example, you could call an API to save the trip information
-    console.log(trip);
+  const handleAddPassager = () => {
+    setTrip((prevTrip) => ({
+      ...prevTrip,
+      passagers: [...prevTrip.passagers, { nom: '' }],
+    }));
+  };
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+
+      setLoading(true);
+
+      console.log('Nouveau trajet à enregistrer :', JSON.stringify(trip));
+
+      const response = await axios.post('/api/new_trip', trip);
+           
+
+      if (response && response.data) {
+
+        console.log('Réponse Axios réussie:', response.data)
+            
+        // Log pour vérifier si la navigation est atteinte
+        console.log('Avant la navigation vers Home');
+
+        // Retarder la navigation de 500 millisecondes
+        setTimeout(() => {
+          navigation.navigate("Home");
+          console.log('Après la navigation vers Home');
+        }, 500);
+
+      } else {
+        console.error('Pas de data dans la réponse Axios');
+        Alert.alert("Erreur lors de la création du trajet");
+      }
+    } catch (error) {
+      console.error('Erreur lors de la requête Axios :', error);
+      Alert.alert("Erreur lors de la création du trajet");
+    } finally {
+      setLoading(false);
+      console.log("fin de chargement")
+    }
   };
 
   return (
@@ -24,23 +70,42 @@ const NouveauTrajet = () => {
       <TextInput
         style={styles.input}
         placeholder="Date"
-        onChangeText={(text) => handleInputChange('date', text)}
+        onChangeText={(text) => setTrip({ ...trip, date: text })}
         value={trip.date}
       />
       <TextInput
         style={styles.input}
         placeholder="Conducteur"
-        onChangeText={(text) => handleInputChange('driver', text)}
-        value={trip.driver}
+        onChangeText={(text) => setTrip({ ...trip, conducteur: text })}
+        value={trip.conducteur}
       />
       <TextInput
         style={styles.input}
         placeholder="Groupe"
-        onChangeText={(text) => handleInputChange('group', text)}
+        onChangeText={(text) => setTrip({ ...trip, group: text })}
         value={trip.group}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>ENREGISTRER</Text>
+      {trip.passagers.map((passager, index) => (
+        <TextInput
+          key={`passager-${index}`}
+          style={styles.input}
+          placeholder="Rentre le nom des passagers"
+          onChangeText={(text) => handleInputChange(text, index)}
+          value={passager.nom}
+      />
+      ))}
+      <TouchableOpacity style={styles.button} onPress={handleAddPassager}>
+        <Text style={styles.buttonText}>AJOUTER UN AUTRE PASSAGER</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: loading ? 'gray' : 'black' }]}
+        onPress={handleSubmit}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? 'ENREGISTREMENT EN COURS...' : 'ENREGISTRER LE TRAJET'}
+        </Text>
       </TouchableOpacity>
     </View>
   );

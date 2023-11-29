@@ -6,6 +6,10 @@ const {
   createGroupe,
 } = require("../controllers/group");
 
+const {
+  createTrip,
+} = require("../controllers/trip");
+
 router.use((req, res, next) => {
   console.log('Requête reçue :', req.method, req.url, req.body);
   next();
