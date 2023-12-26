@@ -12,14 +12,16 @@ const groupeSchema = new mongoose.Schema(
        trim: true,
        required: false,
      },
-    membres: {
-      type: Array, 
-      ref: 'userMail',
-      trim: true,
-      required: true,
-      unique: true,
+    membres: [{
+      userMail: {
+        type: String,
+        trim: true,
+        required: true,
+      },
+    }],
+    resetCode: {
+      type: String, // Ajoutez le type approprié ici
     },
-    resetCode: "",
   },
   { timestamps: true }
 );

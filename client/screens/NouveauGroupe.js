@@ -13,9 +13,9 @@ const MonGroupe = () => {
   const [group, setGroup] = useState({
     nom: '',
     trajetUsuel: '',
-    membres: [{ userMail: state.user.email }],
+    membres: [],
   });
-
+  
   console.log(group)
 
   const [loading, setLoading] = useState(false);
@@ -28,22 +28,29 @@ const MonGroupe = () => {
       ),
     }));
   };
-
+  
   const handleAddMember = () => {
     setGroup((prevGroup) => ({
       ...prevGroup,
       membres: [...prevGroup.membres, { userMail: '' }],
     }));
   };
+  
 
   const handleSubmit = async () => {
+
+    if (group.membres.length === 0) {
+      // Affichez un message d'erreur ou bloquez la soumission
+      console.error("Le champ 'membres' ne peut pas être vide.");
+      return;
+    }
     try {
 
       setLoading(true);
 
       console.log('Nouveau groupe à enregistrer :', JSON.stringify(group));
 
-      const response = await axios.post('/api/new_group', JSON.stringify(group), {
+      const response = await axios.post('/api/new_group', group, {
         headers: {
           'Content-Type': 'application/json',
         },
