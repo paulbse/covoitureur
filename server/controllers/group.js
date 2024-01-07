@@ -23,3 +23,19 @@ exports.createGroupe = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.searchGroup = async (req, res) => {
+  console.log('Requête reçue :', req.body);
+  try {
+    // Logique de recherche ici
+    const groupName = req.query.groupName; // ou req.params.groupName selon le type de recherche
+    console.log('groupName',groupName)
+    // Effectuez la recherche dans la base de données ou autre source de données
+    const foundGroups = await Group.find({ nom: groupName });
+    console.log('foundGroups',foundGroups)
+    res.json({ groups: foundGroups });
+  } catch (error) {
+    console.error('Erreur lors de la recherche de groupe :', error);
+    res.status(500).json({ error: 'Erreur lors de la recherche de groupe' });
+  }
+};

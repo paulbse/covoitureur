@@ -4,6 +4,7 @@ const router = express.Router();
 
 const {
   createGroupe,
+  searchGroup,
 } = require("../controllers/group");
 
 const {
@@ -11,7 +12,7 @@ const {
 } = require("../controllers/trip");
 
 router.use((req, res, next) => {
-  console.log('Requête reçue :', req.method, req.url, req.body);
+  console.log('Requête reçue router.use :', req.method, req.url, req.body);
   next();
 });
 
@@ -37,5 +38,6 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.post("/upload-image", uploadImage)
 router.post('/new_group', createGroupe);
+router.get('/groups/search', searchGroup);
 
 module.exports = router;

@@ -1,57 +1,77 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, Text, FlatList, TouchableOpacity, ScrollView, View, Alert, ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
 const RejoindreGroupe = () => {
-  const [group, setGroup] = useState({
-    groupName: '',
-    trip: '',
-    members: [{ email: '' }],
-  });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (value, index) => {
-    const members = [...group.members];
-    members[index]['email'] = value;
-    setGroup({ ...group, members });
-  };
+  const handleSearch = async () => {
+    if (searchTerm.trim().length === 0) {
+      // Affichez un message d'erreur ou bloquez la soumission
+      console.error("Le champ 'Nom du groupe' ne peut pas être vide.");
+      return;
+    }
 
-  const handleAddMember = () => {
-    setGroup({ ...group, members: [...group.members, { email: '' }] });
-  };
+    try {
+      setLoading(true);
 
-  const handleSubmit = () => {
-    // Logic to submit the data goes here
-    // This is where you would call an API to save the group information
-    console.log(group);
+      console.log('Je souhaite rejoindre le groupe :', searchTerm);
+
+      const response = await axios.get(`/api/groups/search?groupName=${searchTerm}`);
+      
+      if (response && response.data && response.data.groups) {
+        setSearchResults(response.data.groups);
+
+        // Log pour vérifier si la navigation est atteinte
+        console.log('Réponse Axios réussie:', response.data);
+        console.log('searchResults:', searchResults);
+        console.log('Avant la navigation vers Home');
+      } else {
+        console.error('Pas de données dans la réponse Axios');
+        Alert.alert("Aucun groupe trouvé avec ce nom.");
+      }
+    } catch (error) {
+      console.error('Erreur lors de la requête Axios :', error);
+      Alert.alert("Erreur lors de la recherche du groupe");
+    } finally {
+      setLoading(false);
+      console.log("Fin de chargement");
+    }
   };
 
   return (
+    <View>
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>REJOINDRE GROUPE</Text>
       <TextInput
         style={styles.input}
         placeholder="Nom du groupe"
-        onChangeText={(text) => setGroup({ ...group, groupName: text })}
-        value={group.groupName}
+        onChangeText={(text) => setSearchTerm(text)}
+        value={searchTerm}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="groupId"
-        onChangeText={(text) => setGroup({ ...group, trip: text })}
-        value={group.trip}
-      />
-      {group.members.map((member, index) => (
-        <TextInput
-          key={`member-${index}`}
-          style={styles.input}
-          placeholder="Adresse mail du membre"
-          onChangeText={(text) => handleInputChange(text, index)}
-          value={member.email}
-        />
-      ))}
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+
+      <TouchableOpacity style={styles.button} onPress={handleSearch}>
         <Text style={styles.buttonText}>REJOINDRE LE GROUPE</Text>
       </TouchableOpacity>
-    </ScrollView>
+
+      {loading && <ActivityIndicator size="large" color="black" />}
+      </ScrollView>
+
+      <View contentContainerStyle={styles.container}>  
+      <FlatList
+        data={searchResults}
+        keyExtractor={(item) => item.nom}
+        renderItem={({ item }) => (
+          <View key={item.nom}>
+            <Text>{item.nom}</Text>
+            {/* Ajoutez ici d'autres informations du groupe si nécessaire */}
+          </View>
+        )}
+      />
+      </View>
+    </View>
   );
 };
 
