@@ -5,6 +5,8 @@ const router = express.Router();
 const {
   createGroupe,
   searchGroup,
+  addMemberToGroup,
+  byUserEmail
 } = require("../controllers/group");
 
 const {
@@ -39,5 +41,7 @@ router.post("/reset-password", resetPassword);
 router.post("/upload-image", uploadImage)
 router.post('/new_group', createGroupe);
 router.get('/groups/search', searchGroup);
+router.post('/join_group', addMemberToGroup);
+router.get('/groups/byUserEmail', byUserEmail);
 
 module.exports = router;

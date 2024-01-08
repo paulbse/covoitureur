@@ -6,6 +6,7 @@ const groupeSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: false,
+      unique: true
     },
     trajetUsuel: {
        type: String,
@@ -25,6 +26,11 @@ const groupeSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Method to find groups by user email
+groupeSchema.statics.findByUserEmail = function (userEmail) {
+  return this.find({ 'membres.userMail': userEmail });
+};
 
 const Group = mongoose.model('Group', groupeSchema);
 

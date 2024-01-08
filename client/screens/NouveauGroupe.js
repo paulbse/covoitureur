@@ -36,52 +36,53 @@ const MonGroupe = () => {
     }));
   };
   
-
   const handleSubmit = async () => {
-
     if (group.membres.length === 0) {
-      // Affichez un message d'erreur ou bloquez la soumission
+      // Display an error message or prevent submission
       console.error("Le champ 'membres' ne peut pas être vide.");
       return;
     }
+  
     try {
-
       setLoading(true);
-
       console.log('Nouveau groupe à enregistrer :', JSON.stringify(group));
-
+  
       const response = await axios.post('/api/new_group', group, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-           
-
+  
       if (response && response.data) {
-
-        console.log('Réponse Axios réussie:', response.data)
-            
-        // Log pour vérifier si la navigation est atteinte
+        console.log('Réponse Axios réussie:', response.data);
+  
+        // Log to check if navigation is reached
         console.log('Avant la navigation vers Home');
-
-        // Retarder la navigation de 500 millisecondes
+  
+        // Delay navigation by 500 milliseconds
         setTimeout(() => {
           navigation.navigate("Home");
           console.log('Après la navigation vers Home');
         }, 500);
-
       } else {
         console.error('Pas de data dans la réponse Axios');
         Alert.alert("Erreur lors de la création du groupe");
       }
     } catch (error) {
       console.error('Erreur lors de la requête Axios :', error);
-      Alert.alert("Erreur lors de la création du groupe");
+  
+      if (error.response && error.response.status === 400) {
+        // Handle duplicate group name error
+        Alert.alert("Erreur lors de la création du groupe", "Un groupe avec ce nom existe déjà.");
+      } else {
+        // Handle other errors
+        Alert.alert("Erreur lors de la création du groupe");
+      }
     } finally {
       setLoading(false);
-      console.log("fin de chargement")
-    }
-  };
+      console.log("fin de chargement");
+    };
+  };  
     
   return (
     <ScrollView contentContainerStyle={styles.container}>

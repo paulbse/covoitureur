@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, Text, FlatList, TouchableOpacity, ScrollView, View, Alert, ActivityIndicator } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, FlatList, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
+import { AuthContext } from '../context/auth';
 
 const RejoindreGroupe = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [state, setState] = useContext(AuthContext);
 
-  const handleSearch = async () => {
+  const handleSearch = async () => {  
     if (searchTerm.trim().length === 0) {
-      // Affichez un message d'erreur ou bloquez la soumission
       console.error("Le champ 'Nom du groupe' ne peut pas être vide.");
       return;
     }
@@ -24,7 +25,6 @@ const RejoindreGroupe = () => {
       if (response && response.data && response.data.groups) {
         setSearchResults(response.data.groups);
 
-        // Log pour vérifier si la navigation est atteinte
         console.log('Réponse Axios réussie:', response.data);
         console.log('searchResults:', searchResults);
         console.log('Avant la navigation vers Home');
@@ -41,9 +41,44 @@ const RejoindreGroupe = () => {
     }
   };
 
+  const joinGroup = async (groupName) => {
+    try {
+      setLoading(true);
+  
+      // Remplacez 'userEmail' par l'email de l'utilisateur connecté
+      const userEmail = state.user.email;
+  
+      // Check if the user is already a member of the group
+      const isUserAlreadyMember = searchResults.some(
+        (group) => group.nom === groupName && group.membres.some((membre) => membre.userMail === userEmail)
+      );
+  
+      if (isUserAlreadyMember) {
+        Alert.alert('Déjà membre', 'Vous êtes déjà membre de ce groupe.');
+        return;
+      }
+  
+      const response = await axios.post('/api/join_group', {
+        groupName,
+        memberEmail: userEmail,
+      });
+  
+      if (response && response.data && response.data.group) {
+        Alert.alert('Succès', 'Vous avez rejoint le groupe avec succès!');
+      } else {
+        Alert.alert('Erreur', 'Erreur lors de la tentative de rejoindre le groupe');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la requête Axios :', error);
+      Alert.alert('Erreur', 'Erreur lors de la tentative de rejoindre le groupe');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   return (
-    <View>
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.header}>REJOINDRE GROUPE</Text>
       <TextInput
         style={styles.input}
@@ -57,28 +92,34 @@ const RejoindreGroupe = () => {
       </TouchableOpacity>
 
       {loading && <ActivityIndicator size="large" color="black" />}
-      </ScrollView>
 
-      <View contentContainerStyle={styles.container}>  
       <FlatList
         data={searchResults}
         keyExtractor={(item) => item.nom}
         renderItem={({ item }) => (
-          <View key={item.nom}>
-            <Text>{item.nom}</Text>
-            {/* Ajoutez ici d'autres informations du groupe si nécessaire */}
+          <View key={item.nom} style={styles.groupContainer}>
+            <Text>Nom du groupe: {item.nom}</Text>
+            <Text>Trajet: {item.trajetUsuel}</Text>
+            <Text>Membres:</Text>
+            {item.membres.map((membre) => (
+              <Text key={membre.userMail}>{membre.userMail}</Text>
+            ))}
+            <TouchableOpacity
+              style={styles.joinButton}
+              onPress={() => joinGroup(item.nom)}
+            >
+              <Text style={styles.buttonText}>Rejoindre</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    alignItems: 'center',
+    flex: 1,
     padding: 20,
   },
   header: {
@@ -104,6 +145,19 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     textAlign: 'center',
+  },
+  groupContainer: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#000',
+    marginTop: 10,
+  },
+  joinButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    alignSelf: 'stretch',
   },
 });
 
